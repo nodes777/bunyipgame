@@ -1,0 +1,56 @@
+Fishing Game
+==========================
+
+A phaser game built around my fascination of fish and collecting.
+
+BIG TO DOs
+==================
+* Improve Map
+* Add fish
+* Manage Inventory
+
+Little TO DOs
+==================
+* Add rarity to fish
+* Add fish chosen by rarity
+* Fade the background scene when starting miniGame
+* Change state transition on ext inventory to player x and y
+
+
+
+Upgrade Ideas/Buffs and DeBuffs
+==================
+* Slow hook speed
+* Try again if you miss
+* Fish Head Bigger
+
+ATTRIBUTIONS
+==================
+
+* [Samme](http://www.html5gamedevs.com/profile/22815-samme/) - Solved the issue of getting 2 game states to run
+
+
+FRAMEWORKS AND LIBRARIES
+========================
+
+* [Tiled](http://www.mapeditor.org/)
+* [Phaser](http://phaser.io/)
+* [Piskel](http://piskelapp.com/)
+
+BUGS
+==================
+
+* ~~Sometimes the screen comes back from the mini-game and is off by a few pixels, ie the inventory and time are covered up, screen shake messes game camera up~~
+* Meridium at 12pm reads as 12am, and 0am at midnight
+* Player will move in Y direction if keys are still held after casting. Current fix is to manually set keys to not down before launching minigame
+
+DEVELOPMENT
+===========
+
+The game is client side javascript, html and css. It should run when served up by any web server.
+
+License
+=======
+
+[MIT](http://en.wikipedia.org/wiki/MIT_License) license.
+
