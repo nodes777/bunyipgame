@@ -50,7 +50,7 @@ TopDownGame.Boot.prototype = {
          }
      }
  });
- this.game.stateTransition.to('state1'); //....and then in a different state... 
+ this.game.stateTransition.to('state1'); //....and then in a different state...
 
 //shrink in
  this.game.stateTransition.configure({

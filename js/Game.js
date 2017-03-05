@@ -4,12 +4,12 @@ var TopDownGame = TopDownGame || {};
 TopDownGame.Game = function() {};
 
 TopDownGame.Game.prototype = {
-    init: function() {
-
+    init: function(level) {
+        console.log(level);
+        this.level = level;
     },
     create: function() {
-
-            this.map = this.game.add.tilemap('level1');
+            this.map = this.game.add.tilemap('level'+this.level);
 
             //the first parameter is the tileset name as specified in Tiled, the second is the key to the asset
             this.map.addTilesetImage('basicTiles', 'gameTiles');
@@ -31,6 +31,7 @@ TopDownGame.Game.prototype = {
                 x:this.map.objects.objects[0].x,
                 y:this.map.objects.objects[0].y
             };
+            this.home = new Phaser.Rectangle(this.map.objects.objects[2].x, this.map.objects.objects[2].y, this.map.objects.objects[2].width, this.map.objects.objects[2].height);
 
             //FOR TESTING ONLY
             dogSpawnCoords.x = playerSpawnCoords.x - 40;
@@ -60,7 +61,6 @@ TopDownGame.Game.prototype = {
         //move player with cursor keys
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.spacebar = this.game.input.keyboard.addKey(32);
-        this.shiftKey = this.game.input.keyboard.addKey(16);
         //Prevent arrow and space bar keys from working on the browser. IE scrolling around
         this.game.input.keyboard.addKeyCapture([37, 38, 39, 40, 32]);
 
@@ -98,6 +98,10 @@ TopDownGame.Game.prototype = {
         }
 
         if(this.playerHasDog){
+            if(this.home.contains(this.player.x, this.player.y)){
+                this.levelComplete();
+            }
+            //Depending on the direction the player is facing, have the dog tail behind
             if(this.player.facing==="left"){
                 this.dog.x = this.player.x+15;
             } else {
@@ -114,8 +118,10 @@ TopDownGame.Game.prototype = {
 
     },
     playerGotDog: function(){
-        console.log("touched dog");
         this.dog.scale.setTo(0.5,0.5);
         this.playerHasDog = true;
+    },
+    levelComplete: function(){
+       this.game.stateTransition.to('Menu', false, false, this.level);
     }
 };
