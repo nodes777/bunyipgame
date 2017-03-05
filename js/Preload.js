@@ -17,7 +17,7 @@ TopDownGame.Preload.prototype = {
 
 
     //this.load.image('player', 'assets/images/guy.png');
-    this.load.spritesheet('player', 'assets/images/guySprite.png', 32, 32);
+    this.load.spritesheet('player', 'assets/images/guyWalk.png', 32, 32);
     this.load.spritesheet('dog', 'assets/images/dog.png', 32, 32);
   },
   create: function() {

@@ -1,14 +1,11 @@
 var TopDownGame = TopDownGame || {};
 
 //title screen
-TopDownGame.Game = function() {
-
-};
+TopDownGame.Game = function() {};
 
 TopDownGame.Game.prototype = {
     init: function() {
 
-        
     },
     create: function() {
 
@@ -35,20 +32,26 @@ TopDownGame.Game.prototype = {
                 y:this.map.objects.objects[0].y
             };
 
-            console.log(this.map.objects.objects);
+            //FOR TESTING ONLY
+            dogSpawnCoords.x = playerSpawnCoords.x - 40;
+            dogSpawnCoords.y = playerSpawnCoords.y - 40;
 
             this.player = this.game.add.sprite(playerSpawnCoords.x, playerSpawnCoords.y, 'player');
-            this.player.animations.add('right', [0, 1, 2, 3], 10, false);
-            this.player.animations.add('left', [4, 5, 6, 7], 10, false);
-            this.player.facing = "right";
+            this.player.animations.add('down', [0, 1, 2, 3], 10, false);
+            this.player.animations.add('up', [4, 5, 6, 7], 10, false);
+            this.player.animations.add('right', [8, 9, 10, 11], 10, false);
+            this.player.animations.add('left', [12, 13, 14, 15], 10, false);
+            this.player.facing = "down";
 
             this.game.physics.arcade.enable(this.player);
             this.player.body.collideWorldBounds = true;
 
             this.dog = this.game.add.sprite(dogSpawnCoords.x, dogSpawnCoords.y, 'dog');
             this.dog.animations.add('toungue', [0, 1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17], 5, true);
-             this.dog.animations.play('toungue');
+            this.dog.animations.play('toungue');
+            this.physics.arcade.enableBody(this.dog);
             this.dog.scale.setTo(0.75,0.75);
+            this.playerHasDog = false;
 
 
         this.game.camera.setPosition(this.player.x, this.player.y);
@@ -65,7 +68,11 @@ TopDownGame.Game.prototype = {
     },
     update: function() {
         //collisions
-         this.game.physics.arcade.collide(this.player, this.blockedLayer);
+        this.game.physics.arcade.collide(this.player, this.blockedLayer);
+        //If player hasn't gotten the dog yet, check for an overlap of those sprites
+        if(!this.playerHasDog){
+            this.game.physics.arcade.overlap(this.player, this.dog, this.playerGotDog, null, this);
+        }
 
         //player movement
         this.player.body.velocity.y = 0;
@@ -73,10 +80,12 @@ TopDownGame.Game.prototype = {
 
         if (this.cursors.up.isDown) {
             this.player.body.velocity.y -= 50;
-            //this.player.facing = "up";
+            this.player.animations.play('up');
+            this.player.facing = "up";
         } else if (this.cursors.down.isDown) {
             this.player.body.velocity.y += 50;
-            //this.player.facing = "down";
+            this.player.animations.play('down');
+            this.player.facing = "down";
         }
         if (this.cursors.left.isDown) {
             this.player.body.velocity.x -= 50;
@@ -87,8 +96,27 @@ TopDownGame.Game.prototype = {
             this.player.animations.play('right');
             this.player.facing = "right";
         }
+
+        if(this.playerHasDog){
+            if(this.player.facing==="left"){
+                this.dog.x = this.player.x+15;
+            } else {
+                this.dog.x = this.player.x;
+            }
+            if(this.player.facing==="down"){
+                this.dog.y = this.player.y-10;
+            }else{
+                this.dog.y = this.player.y+20;
+            }
+            
+        }
     },
     render: function() {
 
     },
+    playerGotDog: function(){
+        console.log("touched dog");
+        this.dog.scale.setTo(0.5,0.5);
+        this.playerHasDog = true;
+    }
 };
