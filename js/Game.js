@@ -105,10 +105,9 @@ TopDownGame.Game.prototype = {
             }
             if(this.player.facing==="down"){
                 this.dog.y = this.player.y-10;
-            }else{
+            } else {
                 this.dog.y = this.player.y+20;
             }
-            
         }
     },
     render: function() {
