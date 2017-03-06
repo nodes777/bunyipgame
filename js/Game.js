@@ -32,7 +32,7 @@ TopDownGame.Game.prototype = {
                 x:this.map.objects.objects[0].x,
                 y:this.map.objects.objects[0].y
             };
-            var bunyipSpawnCoords = {
+            this.bunyipSpawnCoords = {
                 x: playerSpawnCoords.x - 90,
                 y:playerSpawnCoords.y - 90
             };
@@ -59,10 +59,8 @@ TopDownGame.Game.prototype = {
             this.dog.scale.setTo(0.75,0.75);
             this.playerHasDog = false;
 
-            this.bunyip = this.game.add.sprite(bunyipSpawnCoords.x, bunyipSpawnCoords.y, 'bunyip');
-            this.bunyip.animations.add('wiggle', null, 15, true);
-            this.bunyip.animations.play('wiggle');
-            this.physics.arcade.enableBody(this.dog);
+            this.bunyipHasSpawned = false;
+            this.spawnBunyip();
 
 
         this.game.camera.setPosition(this.player.x, this.player.y);
@@ -123,6 +121,10 @@ TopDownGame.Game.prototype = {
                 this.dog.y = this.player.y+20;
             }
         }
+
+        if(this.bunyipHasSpawned){
+            this.bunyipHunting();
+        }
     },
     render: function() {
 
@@ -133,5 +135,52 @@ TopDownGame.Game.prototype = {
     },
     levelComplete: function(){
        this.game.stateTransition.to('Menu', false, false, this.level);
+    },
+    spawnBunyip: function(){
+        this.bunyip = this.game.add.sprite(this.bunyipSpawnCoords.x, this.bunyipSpawnCoords.y, 'bunyip');
+        this.bunyip.animations.add('wiggle', null, 15, true);
+        this.bunyip.animations.play('wiggle');
+        this.physics.arcade.enableBody(this.bunyip);
+
+        this.bunyip.SPEED = 50; // missile speed pixels/second
+        this.bunyip.TURN_RATE = 5;
+
+        this.bunyipHasSpawned = true;
+    },
+    bunyipHunting: function() {
+        console.log("hunting");
+    // Calculate the angle from the bunyip to the player.x
+    // and player.y are the mouse position
+    var targetAngle = this.game.math.angleBetween(
+        this.bunyip.x, this.bunyip.y,
+        this.player.x, this.player.y
+    );
+
+    // Gradually (this.TURN_RATE) aim the missile towards the target angle
+    if (this.bunyip.rotation !== targetAngle) {
+        // Calculate difference between the current angle and targetAngle
+        var delta = targetAngle - this.bunyip.rotation;
+
+        // Keep it in range from -180 to 180 to make the most efficient turns.
+        if (delta > Math.PI) delta -= Math.PI * 2;
+        if (delta < -Math.PI) delta += Math.PI * 2;
+
+        if (delta > 0) {
+            // Turn clockwise
+            this.bunyip.angle += this.bunyip.TURN_RATE;
+        } else {
+            // Turn counter-clockwise
+            this.bunyip.angle -= this.bunyip.TURN_RATE;
+        }
+
+        // Just set angle to target angle if they are close
+        if (Math.abs(delta) < this.game.math.degToRad(this.bunyip.TURN_RATE)) {
+            this.bunyip.rotation = targetAngle;
+        }
+    }
+
+    // Calculate velocity vector based on this.rotation and this.SPEED
+    this.bunyip.body.velocity.x = Math.cos(this.bunyip.rotation) * this.bunyip.SPEED;
+    this.bunyip.body.velocity.y = Math.sin(this.bunyip.rotation) * this.bunyip.SPEED;
     }
 };
