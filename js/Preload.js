@@ -20,6 +20,7 @@ TopDownGame.Preload.prototype = {
     //this.load.image('player', 'assets/images/guy.png');
     this.load.spritesheet('player', 'assets/images/guyWalk.png', 32, 32);
     this.load.spritesheet('dog', 'assets/images/dog.png', 32, 32);
+    this.load.spritesheet('bunyip', 'assets/images/bunyip.png', 32, 32);
   },
   create: function() {
     this.state.start('Game', false, false, 1);

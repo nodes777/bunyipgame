@@ -6,12 +6,12 @@ TopDownGame.Menu = function(){};
 TopDownGame.Menu.prototype = {
   init: function(level){
     this.nextLevel = level;
+    this.maxLevel = 3;
   },
   preload: function() {
 
   },
   create: function() {
-   console.log("menu");
    this.nextLevel++;
    this.map = this.game.add.tilemap('menu');
     //the first parameter is the tileset name as specified in Tiled, the second is the key to the asset
@@ -38,13 +38,15 @@ TopDownGame.Menu.prototype = {
     }
   },
   setLevelText: function(hour) {
-        words = "Keep Going?";
-
+    var words;
+    if(this.nextLevel<this.maxLevel){
+       words = "Keep Going? Enter or Spacebar";
+      } else {
+        words = "You've reached the end";
+      }
         this.style = {
-            font: "24px Arial",
-            fill: "white",
-            wordWrap: false,
-            wordWrapWidth: 100,
+            font: "24px Gabriella",
+            fill: "#ffffff",
         };
 
         text = this.game.add.text(this.game.camera.width/2, this.game.camera.height/2, words, this.style);

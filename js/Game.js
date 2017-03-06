@@ -5,7 +5,6 @@ TopDownGame.Game = function() {};
 
 TopDownGame.Game.prototype = {
     init: function(level) {
-        console.log(level);
         this.level = level;
     },
     create: function() {
@@ -20,6 +19,8 @@ TopDownGame.Game.prototype = {
 
             //collision on blockedLayer
             this.map.setCollisionBetween(1, 2000, true, 'blockedlayer');
+            //makes an array that's easier to write than the objects.objects
+            this.mapObjs = this.map.objects.objects;
 
             //resizes the game world to match the layer dimensions
             this.backgroundlayer.resizeWorld();
@@ -31,7 +32,11 @@ TopDownGame.Game.prototype = {
                 x:this.map.objects.objects[0].x,
                 y:this.map.objects.objects[0].y
             };
-            this.home = new Phaser.Rectangle(this.map.objects.objects[2].x, this.map.objects.objects[2].y, this.map.objects.objects[2].width, this.map.objects.objects[2].height);
+            var bunyipSpawnCoords = {
+                x: playerSpawnCoords.x - 90,
+                y:playerSpawnCoords.y - 90
+            };
+            this.home = new Phaser.Rectangle(this.mapObjs[2].x, this.mapObjs[2].y, this.mapObjs[2].width, this.mapObjs[2].height);
 
             //FOR TESTING ONLY
             dogSpawnCoords.x = playerSpawnCoords.x - 40;
@@ -53,6 +58,11 @@ TopDownGame.Game.prototype = {
             this.physics.arcade.enableBody(this.dog);
             this.dog.scale.setTo(0.75,0.75);
             this.playerHasDog = false;
+
+            this.bunyip = this.game.add.sprite(bunyipSpawnCoords.x, bunyipSpawnCoords.y, 'bunyip');
+            this.bunyip.animations.add('wiggle', null, 15, true);
+            this.bunyip.animations.play('wiggle');
+            this.physics.arcade.enableBody(this.dog);
 
 
         this.game.camera.setPosition(this.player.x, this.player.y);
