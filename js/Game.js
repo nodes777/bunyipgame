@@ -87,7 +87,7 @@ TopDownGame.Game.prototype = {
         if(!this.playerHasDog){
             this.game.physics.arcade.overlap(this.player, this.dog, this.playerGotDog, null, this);
         }
-
+        this.game.physics.arcade.overlap(this.player, this.bunyip, this.gameOver, null, this);
         //player movement
         this.player.body.velocity.y = 0;
         this.player.body.velocity.x = 0;
@@ -145,7 +145,7 @@ TopDownGame.Game.prototype = {
         this.playerHasDog = true;
     },
     levelComplete: function(){
-       this.game.stateTransition.to('Menu', false, false, this.level);
+       this.game.stateTransition.to('Menu', false, false, this.level, false);
     },
     spawnBunyip: function(){
         this.bunyip = this.game.add.sprite(this.bunyipSpawnCoords.x, this.bunyipSpawnCoords.y, 'bunyip');
@@ -193,5 +193,8 @@ TopDownGame.Game.prototype = {
     // Calculate velocity vector based on this.rotation and this.SPEED
     this.bunyip.body.velocity.x = Math.cos(this.bunyip.rotation) * this.bunyip.SPEED;
     this.bunyip.body.velocity.y = Math.sin(this.bunyip.rotation) * this.bunyip.SPEED;
-    }
+    },
+    gameOver: function(){
+       this.game.stateTransition.to('Menu', false, false, this.level, true);
+    },
 };
