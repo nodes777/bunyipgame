@@ -1,7 +1,19 @@
 Bunyip Game
 ==========================
 
-A phaser game built to promote the song about [Bunyips](https://en.wikipedia.org/wiki/Bunyip).
+A phaser game built to promote my song about [Bunyips](https://en.wikipedia.org/wiki/Bunyip).
+
+TO DOs
+======
+* Review bunyipHunting function's math
+* Implement randon spawn place for bunyip - Tiled and Code
+* Add Level 3
+* Add Game Over
+* Add Sound
+* Find How to Full Screen
+* Research Controller Input
+* Dim game world for dusk
+
 FRAMEWORKS AND LIBRARIES
 ========================
 

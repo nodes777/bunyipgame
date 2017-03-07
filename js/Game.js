@@ -38,6 +38,12 @@ TopDownGame.Game.prototype = {
             };
             this.home = new Phaser.Rectangle(this.mapObjs[2].x, this.mapObjs[2].y, this.mapObjs[2].width, this.mapObjs[2].height);
 
+            var polygonSpawn = this.mapObjs[3].polygon;
+            this.bunyipSpawnZone = new Phaser.Polygon(polygonSpawn[0][0],polygonSpawn[0][1],polygonSpawn[1][0],
+                polygonSpawn[1][1],polygonSpawn[2][0],polygonSpawn[2][1],polygonSpawn[3][0],
+                polygonSpawn[3][1],polygonSpawn[4][0],polygonSpawn[4][1],polygonSpawn[5][0],polygonSpawn[5][1]);
+
+            console.log(this.bunyipSpawnZone);
             //FOR TESTING ONLY
             dogSpawnCoords.x = playerSpawnCoords.x - 40;
             dogSpawnCoords.y = playerSpawnCoords.y - 40;
@@ -125,8 +131,13 @@ TopDownGame.Game.prototype = {
         if(this.bunyipHasSpawned){
             this.bunyipHunting();
         }
+        if(this.bunyipSpawnZone.contains(this.player.x,this.player.y)){
+            console.log("containing");
+        }
     },
     render: function() {
+        var debug = this.game.debug;
+        debug.geom(this.bunyipSpawnZone._points[0], 'yellow');
 
     },
     playerGotDog: function(){

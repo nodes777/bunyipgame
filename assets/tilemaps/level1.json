@@ -61,6 +61,42 @@
                  "width":67,
                  "x":287,
                  "y":962
+                }, 
+                {
+                 "height":0,
+                 "id":9,
+                 "name":"spawnPointBunyip",
+                 "polygon":[
+                        {
+                         "x":158,
+                         "y":-6
+                        }, 
+                        {
+                         "x":20,
+                         "y":-852
+                        }, 
+                        {
+                         "x":902,
+                         "y":-852
+                        }, 
+                        {
+                         "x":892,
+                         "y":-996
+                        }, 
+                        {
+                         "x":-96,
+                         "y":-978
+                        }, 
+                        {
+                         "x":-114,
+                         "y":0
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":116,
+                 "y":994
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -69,7 +105,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":5,
+ "nextobjectid":10,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,
