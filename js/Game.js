@@ -29,12 +29,11 @@ TopDownGame.Game.prototype = {
             this.setUpDog();
             this.findBunyipSpawn();
 
-            this.home = new Phaser.Rectangle(this.mapObjs[2].x, this.mapObjs[2].y, this.mapObjs[2].width, this.mapObjs[2].height);
-
-
+            this.home = new Phaser.Rectangle(this.mapObjs[2].x, this.mapObjs[2].y, this.mapObjs[2].width+10, this.mapObjs[2].height+10);
 
             this.bunyipHasSpawned = false;
-            this.game.time.events.add(Math.random()*5000 + 5000, this.spawnBunyip, this);
+            //min 10 secs til bunyip spawns, then 0-5 more
+            this.game.time.events.add(Math.random()*5000 + 10000, this.spawnBunyip, this);
 
 
         this.game.camera.setPosition(this.player.x, this.player.y);
@@ -52,7 +51,7 @@ TopDownGame.Game.prototype = {
         this.game.sound.setDecodedCallback([ this.playerSpawnSong, this.bunyipSpawnSong,
             this.bunyipAttackSong ], this.update, this);
 
-        //this.playerSpawnSong.loopFull();
+        this.playerSpawnSong.loopFull();
     },
     update: function() {
         //collisions
@@ -61,26 +60,26 @@ TopDownGame.Game.prototype = {
         if(!this.playerHasDog){
             this.game.physics.arcade.overlap(this.player, this.dog, this.playerGotDog, null, this);
         }
-        this.game.physics.arcade.overlap(this.player, this.bunyip, this.gameOver, null, this);
+
         //player movement
         this.player.body.velocity.y = 0;
         this.player.body.velocity.x = 0;
 
         if (this.cursors.up.isDown) {
-            this.player.body.velocity.y -= 50;
+            this.player.body.velocity.y -= 75;
             this.player.animations.play('up');
             this.player.facing = "up";
         } else if (this.cursors.down.isDown) {
-            this.player.body.velocity.y += 50;
+            this.player.body.velocity.y += 75;
             this.player.animations.play('down');
             this.player.facing = "down";
         }
         if (this.cursors.left.isDown) {
-            this.player.body.velocity.x -= 50;
+            this.player.body.velocity.x -= 75;
             this.player.animations.play('left');
             this.player.facing = "left";
         } else if (this.cursors.right.isDown) {
-            this.player.body.velocity.x += 50;
+            this.player.body.velocity.x += 75;
             this.player.animations.play('right');
             this.player.facing = "right";
         }
@@ -101,7 +100,7 @@ TopDownGame.Game.prototype = {
                 this.dog.y = this.player.y+20;
             }
         }
-
+        this.game.physics.arcade.overlap(this.player, this.bunyip, this.gameOver, null, this);
         if(this.bunyipHasSpawned){
             this.bunyipHunting();
         }
@@ -118,7 +117,7 @@ TopDownGame.Game.prototype = {
     levelComplete: function(){
         this.bunyipSpawnSong.fadeOut(500);
         this.bunyipSpawnSong.onFadeComplete.add(function(){
-            this.game.stateTransition.to('Menu', false, false, this.level, false);
+            this.game.stateTransition.to('Menu', true, false, this.level, false);
       }, this);
     },
     spawnBunyip: function(){
@@ -127,8 +126,10 @@ TopDownGame.Game.prototype = {
         this.bunyip.animations.play('wiggle');
         this.physics.arcade.enableBody(this.bunyip);
         this.bunyip.anchor.setTo(0.5, 0.5);
+        //set body slightly smaller so overlap seems fairer
+        this.bunyip.body.setSize(26, 26);
 
-        this.bunyip.SPEED = 50; // missile speed pixels/second
+        this.bunyip.SPEED = 85; // missile speed pixels/second
         this.bunyip.TURN_RATE = 5;
 
         this.bunyipHasSpawned = true;
@@ -207,8 +208,8 @@ TopDownGame.Game.prototype = {
                 y:this.mapObjs[0].y
             };
                         //FOR TESTING ONLY
-            dogSpawnCoords.x = this.player.x - 40;
-            dogSpawnCoords.y = this.player.y - 40;
+            //dogSpawnCoords.x = this.player.x - 40;
+            //dogSpawnCoords.y = this.player.y - 40;
 
             this.dog = this.game.add.sprite(dogSpawnCoords.x, dogSpawnCoords.y, 'dog');
             this.dog.animations.add('toungue', [0, 1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17], 5, true);
@@ -223,7 +224,7 @@ TopDownGame.Game.prototype = {
         this.bunyipSpawnSong.fadeOut(500);
         this.bunyipSpawnSong.onFadeComplete.add(function(){
             this.bunyipAttackSong.play();
-            this.game.stateTransition.to('Menu', false, false, this.level, true, this.bunyipAttackSong);
+            this.game.stateTransition.to('Menu', true, false, this.level, true, this.bunyipAttackSong);
       }, this);
     },
 };

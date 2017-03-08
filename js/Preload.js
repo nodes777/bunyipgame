@@ -30,6 +30,6 @@ TopDownGame.Preload.prototype = {
     this.load.audio('bunyipAttackSong', 'assets/sound/bunyipattack.mp3');
   },
   create: function() {
-    this.state.start('Game', false, false, 1);
+    this.state.start('Menu', false, false, 0);
   }
 };

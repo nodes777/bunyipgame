@@ -39,20 +39,20 @@ TopDownGame.Menu.prototype = {
         if(this.playerLostGame){
         this.song.fadeOut(500);
         this.song.onFadeComplete.add(function(){
-             this.game.stateTransition.to('Game', false, false, this.nextLevel);
+             this.game.stateTransition.to('Game', true, false, this.nextLevel);
         }, this);
       } else {
-        this.game.stateTransition.to('Game', false, false, this.nextLevel);
+        this.game.stateTransition.to('Game', true, false, this.nextLevel);
       }
     }
     if(this.enter.isDown){
       if(this.playerLostGame){
         this.song.fadeOut(500);
         this.song.onFadeComplete.add(function(){
-             this.game.stateTransition.to('Game', false, false, this.nextLevel);
+             this.game.stateTransition.to('Game', true, false, this.nextLevel);
         }, this);
       } else {
-        this.game.stateTransition.to('Game', false, false, this.nextLevel);
+        this.game.stateTransition.to('Game', true, false, this.nextLevel);
       }
     }
   },
@@ -62,6 +62,9 @@ TopDownGame.Menu.prototype = {
        words = "Keep Going? \n Enter or Spacebar";
       } else {
         words = "You've reached the end";
+      }
+      if(this.nextLevel===1){
+        words = "Find your dog and bring him back home before the Bunyip gets ya! \n Enter or Spacebar";
       }
       if(this.playerLostGame){
         words = "YoU gOt CaUgHt By ThE BuNYip. \n ReTRy FRom ThE BeGinNinG?";
