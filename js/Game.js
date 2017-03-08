@@ -8,6 +8,7 @@ TopDownGame.Game.prototype = {
         this.level = level;
     },
     create: function() {
+            //the map to load is adjusted by passing in the level from menu state
             this.map = this.game.add.tilemap('level'+this.level);
 
             //the first parameter is the tileset name as specified in Tiled, the second is the key to the asset
@@ -16,64 +17,24 @@ TopDownGame.Game.prototype = {
             //create layers
             this.backgroundlayer = this.map.createLayer('background');
             this.blockedLayer = this.map.createLayer('blockedlayer');
-
             //collision on blockedLayer
             this.map.setCollisionBetween(1, 2000, true, 'blockedlayer');
             //makes an array that's easier to write than the objects.objects
             this.mapObjs = this.map.objects.objects;
 
-            //get a random bunyip spawn zone from the bunyip spawn map layer
-            this.bunyipSpawnArr = this.map.objects.bunyipspawns;
-            this.bunyipSpawnZone = this.bunyipSpawnArr[Math.floor(Math.random()*this.bunyipSpawnArr.length)];
-            //get random coords from that spawnzone
-            this.bunyipSpawnCoords = {
-                //Math.random() * (max - min) + min;
-                x: Math.floor(Math.random() * this.bunyipSpawnZone.width) + this.bunyipSpawnZone.x,
-                y: Math.floor(Math.random() * this.bunyipSpawnZone.height) + this.bunyipSpawnZone.y,
-            };
-
-            console.log(this.bunyipSpawnArr);
-            console.log(this.bunyipSpawnZone);
-            console.log(this.bunyipSpawnCoords);
 
             //resizes the game world to match the layer dimensions
             this.backgroundlayer.resizeWorld();
-            var playerSpawnCoords = {
-                x:this.map.objects.objects[1].x,
-                y:this.map.objects.objects[1].y
-            };
-            var dogSpawnCoords = {
-                x:this.map.objects.objects[0].x,
-                y:this.map.objects.objects[0].y
-            };
+            this.setUpPlayer();
+            this.setUpDog();
+            this.findBunyipSpawn();
 
             this.home = new Phaser.Rectangle(this.mapObjs[2].x, this.mapObjs[2].y, this.mapObjs[2].width, this.mapObjs[2].height);
 
-            //FOR TESTING ONLY
-            //dogSpawnCoords.x = playerSpawnCoords.x - 40;
-            //dogSpawnCoords.y = playerSpawnCoords.y - 40;
 
-            this.player = this.game.add.sprite(playerSpawnCoords.x, playerSpawnCoords.y, 'player');
-            this.player.animations.add('down', [0, 1, 2, 3], 10, false);
-            this.player.animations.add('up', [4, 5, 6, 7], 10, false);
-            this.player.animations.add('right', [8, 9, 10, 11], 10, false);
-            this.player.animations.add('left', [12, 13, 14, 15], 10, false);
-            this.player.facing = "down";
-            this.player.anchor.setTo(0.5, 0.5);
-
-            this.game.physics.arcade.enable(this.player);
-            this.player.body.collideWorldBounds = true;
-
-            this.dog = this.game.add.sprite(dogSpawnCoords.x, dogSpawnCoords.y, 'dog');
-            this.dog.animations.add('toungue', [0, 1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17], 5, true);
-            this.dog.animations.play('toungue');
-            this.physics.arcade.enableBody(this.dog);
-            this.dog.scale.setTo(0.75,0.75);
-            this.playerHasDog = false;
-            this.dog.anchor.setTo(0.5, 0.5);
 
             this.bunyipHasSpawned = false;
-           this.game.time.events.add(2000, this.spawnBunyip, this);
+            this.game.time.events.add(Math.random()*5000 + 5000, this.spawnBunyip, this);
 
 
         this.game.camera.setPosition(this.player.x, this.player.y);
@@ -132,10 +93,10 @@ TopDownGame.Game.prototype = {
             if(this.player.facing==="left"){
                 this.dog.x = this.player.x+15;
             } else {
-                this.dog.x = this.player.x;
+                this.dog.x = this.player.x-15;
             }
             if(this.player.facing==="down"){
-                this.dog.y = this.player.y-10;
+                this.dog.y = this.player.y-25;
             } else {
                 this.dog.y = this.player.y+20;
             }
@@ -177,8 +138,18 @@ TopDownGame.Game.prototype = {
         this.darkness = this.game.add.sprite(0,0, 'darkness');
         this.darkness.alpha = 0.1;
     },
+    findBunyipSpawn : function(){
+         //get a random bunyip spawn zone from the bunyip spawn map layer
+            this.bunyipSpawnArr = this.map.objects.bunyipspawns;
+            this.bunyipSpawnZone = this.bunyipSpawnArr[Math.floor(Math.random()*this.bunyipSpawnArr.length)];
+            //get random coords from that spawnzone
+            this.bunyipSpawnCoords = {
+                //Math.random() * (max - min) + min;
+                x: Math.floor(Math.random() * this.bunyipSpawnZone.width) + this.bunyipSpawnZone.x,
+                y: Math.floor(Math.random() * this.bunyipSpawnZone.height) + this.bunyipSpawnZone.y,
+            };
+    },
     bunyipHunting: function() {
-        console.log("hunting");
     // Calculate the angle from the bunyip to the player.x
     // and player.y are the mouse position
     var targetAngle = this.game.math.angleBetween(
@@ -186,7 +157,7 @@ TopDownGame.Game.prototype = {
         this.player.x, this.player.y
     );
 
-    // Gradually (this.TURN_RATE) aim the missile towards the target angle
+    // Gradually (this.TURN_RATE) aim the bunyip towards the target angle
     if (this.bunyip.rotation !== targetAngle) {
         // Calculate difference between the current angle and targetAngle
         var delta = targetAngle - this.bunyip.rotation;
@@ -212,6 +183,40 @@ TopDownGame.Game.prototype = {
     // Calculate velocity vector based on this.rotation and this.SPEED
     this.bunyip.body.velocity.x = Math.cos(this.bunyip.rotation) * this.bunyip.SPEED;
     this.bunyip.body.velocity.y = Math.sin(this.bunyip.rotation) * this.bunyip.SPEED;
+    },
+    setUpPlayer: function(){
+        var playerSpawnCoords = {
+                x:this.mapObjs[1].x,
+                y:this.mapObjs[1].y
+            };
+
+            this.player = this.game.add.sprite(playerSpawnCoords.x, playerSpawnCoords.y, 'player');
+            this.player.animations.add('down', [0, 1, 2, 3], 10, false);
+            this.player.animations.add('up', [4, 5, 6, 7], 10, false);
+            this.player.animations.add('right', [8, 9, 10, 11], 10, false);
+            this.player.animations.add('left', [12, 13, 14, 15], 10, false);
+            this.player.facing = "down";
+            this.player.anchor.setTo(0.5, 0.5);
+            this.game.physics.arcade.enable(this.player);
+            this.player.body.collideWorldBounds = true;
+
+    },
+    setUpDog: function(){
+        var dogSpawnCoords = {
+                x:this.mapObjs[0].x,
+                y:this.mapObjs[0].y
+            };
+                        //FOR TESTING ONLY
+            dogSpawnCoords.x = this.player.x - 40;
+            dogSpawnCoords.y = this.player.y - 40;
+
+            this.dog = this.game.add.sprite(dogSpawnCoords.x, dogSpawnCoords.y, 'dog');
+            this.dog.animations.add('toungue', [0, 1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17], 5, true);
+            this.dog.animations.play('toungue');
+            this.physics.arcade.enableBody(this.dog);
+            this.dog.scale.setTo(0.75,0.75);
+            this.playerHasDog = false;
+            this.dog.anchor.setTo(0.5, 0.5);
     },
     gameOver: function(){
         //callback to finish fadeout before transition
