@@ -1,6 +1,6 @@
 var TopDownGame = TopDownGame || {};
 //new Game(width, height, renderer, parent, state, transparent, antialias, physicsConfig)
-TopDownGame.game = new Phaser.Game(800, 600, Phaser.AUTO, 'game');
+TopDownGame.game = new Phaser.Game(window.screen.width, window.screen.height, Phaser.AUTO, 'game');
 
 TopDownGame.game.state.add('Boot', TopDownGame.Boot);
 TopDownGame.game.state.add('Preload', TopDownGame.Preload);

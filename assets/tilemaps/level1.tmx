@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" nextobjectid="10">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" nextobjectid="13">
  <tileset firstgid="1" name="basicTiles" tilewidth="32" tileheight="32" tilecount="10" columns="5">
   <image source="../images/basicTiles.png" width="160" height="64"/>
  </tileset>
@@ -20,8 +20,9 @@
   <object id="1" name="dog" x="932" y="328" width="22" height="26"/>
   <object id="2" name="spawnPointPlayer" x="316" y="988" width="14" height="18"/>
   <object id="4" name="home" x="287" y="962" width="67" height="60"/>
-  <object id="9" name="spawnPointBunyip" x="116" y="994">
-   <polygon points="-2,-2 20,-852 902,-852 892,-996 -96,-978 -112,0"/>
-  </object>
+ </objectgroup>
+ <objectgroup name="bunyipspawns">
+  <object id="10" name="zone1" x="2" y="4" width="1020" height="180"/>
+  <object id="12" name="zone2" x="-2" y="2" width="158" height="1024"/>
  </objectgroup>
 </map>

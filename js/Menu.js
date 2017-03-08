@@ -4,10 +4,11 @@ var TopDownGame = TopDownGame || {};
 TopDownGame.Menu = function(){};
 
 TopDownGame.Menu.prototype = {
-  init: function(level, lost){
+  init: function(level, lost, song){
     this.nextLevel = level;
-    this.maxLevel = 3;
+    this.maxLevel = 4;
     this.playerLostGame = lost;
+    this.song = song;
   },
   preload: function() {
 
@@ -35,11 +36,24 @@ TopDownGame.Menu.prototype = {
   },
   update: function() {
     if(this.spacebar.isDown){
-
-      this.game.stateTransition.to('Game', false, false, this.nextLevel);
+        if(this.playerLostGame){
+        this.song.fadeOut(500);
+        this.song.onFadeComplete.add(function(){
+             this.game.stateTransition.to('Game', false, false, this.nextLevel);
+        }, this);
+      } else {
+        this.game.stateTransition.to('Game', false, false, this.nextLevel);
+      }
     }
     if(this.enter.isDown){
-      this.game.stateTransition.to('Game', false, false, this.nextLevel);
+      if(this.playerLostGame){
+        this.song.fadeOut(500);
+        this.song.onFadeComplete.add(function(){
+             this.game.stateTransition.to('Game', false, false, this.nextLevel);
+        }, this);
+      } else {
+        this.game.stateTransition.to('Game', false, false, this.nextLevel);
+      }
     }
   },
   setLevelText: function(hour) {

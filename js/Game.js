@@ -22,6 +22,20 @@ TopDownGame.Game.prototype = {
             //makes an array that's easier to write than the objects.objects
             this.mapObjs = this.map.objects.objects;
 
+            //get a random bunyip spawn zone from the bunyip spawn map layer
+            this.bunyipSpawnArr = this.map.objects.bunyipspawns;
+            this.bunyipSpawnZone = this.bunyipSpawnArr[Math.floor(Math.random()*this.bunyipSpawnArr.length)];
+            //get random coords from that spawnzone
+            this.bunyipSpawnCoords = {
+                //Math.random() * (max - min) + min;
+                x: Math.floor(Math.random() * this.bunyipSpawnZone.width) + this.bunyipSpawnZone.x,
+                y: Math.floor(Math.random() * this.bunyipSpawnZone.height) + this.bunyipSpawnZone.y,
+            };
+
+            console.log(this.bunyipSpawnArr);
+            console.log(this.bunyipSpawnZone);
+            console.log(this.bunyipSpawnCoords);
+
             //resizes the game world to match the layer dimensions
             this.backgroundlayer.resizeWorld();
             var playerSpawnCoords = {
@@ -32,21 +46,12 @@ TopDownGame.Game.prototype = {
                 x:this.map.objects.objects[0].x,
                 y:this.map.objects.objects[0].y
             };
-            this.bunyipSpawnCoords = {
-                x: playerSpawnCoords.x - 90,
-                y:playerSpawnCoords.y - 90
-            };
+
             this.home = new Phaser.Rectangle(this.mapObjs[2].x, this.mapObjs[2].y, this.mapObjs[2].width, this.mapObjs[2].height);
 
-            var polygonSpawn = this.mapObjs[3].polygon;
-            this.bunyipSpawnZone = new Phaser.Polygon(polygonSpawn[0][0],polygonSpawn[0][1],polygonSpawn[1][0],
-                polygonSpawn[1][1],polygonSpawn[2][0],polygonSpawn[2][1],polygonSpawn[3][0],
-                polygonSpawn[3][1],polygonSpawn[4][0],polygonSpawn[4][1],polygonSpawn[5][0],polygonSpawn[5][1]);
-
-            console.log(this.bunyipSpawnZone);
             //FOR TESTING ONLY
-            dogSpawnCoords.x = playerSpawnCoords.x - 40;
-            dogSpawnCoords.y = playerSpawnCoords.y - 40;
+            //dogSpawnCoords.x = playerSpawnCoords.x - 40;
+            //dogSpawnCoords.y = playerSpawnCoords.y - 40;
 
             this.player = this.game.add.sprite(playerSpawnCoords.x, playerSpawnCoords.y, 'player');
             this.player.animations.add('down', [0, 1, 2, 3], 10, false);
@@ -54,6 +59,7 @@ TopDownGame.Game.prototype = {
             this.player.animations.add('right', [8, 9, 10, 11], 10, false);
             this.player.animations.add('left', [12, 13, 14, 15], 10, false);
             this.player.facing = "down";
+            this.player.anchor.setTo(0.5, 0.5);
 
             this.game.physics.arcade.enable(this.player);
             this.player.body.collideWorldBounds = true;
@@ -64,9 +70,10 @@ TopDownGame.Game.prototype = {
             this.physics.arcade.enableBody(this.dog);
             this.dog.scale.setTo(0.75,0.75);
             this.playerHasDog = false;
+            this.dog.anchor.setTo(0.5, 0.5);
 
             this.bunyipHasSpawned = false;
-            this.spawnBunyip();
+           this.game.time.events.add(2000, this.spawnBunyip, this);
 
 
         this.game.camera.setPosition(this.player.x, this.player.y);
@@ -78,7 +85,13 @@ TopDownGame.Game.prototype = {
         //Prevent arrow and space bar keys from working on the browser. IE scrolling around
         this.game.input.keyboard.addKeyCapture([37, 38, 39, 40, 32]);
 
+        this.playerSpawnSong = this.game.add.audio('playerSpawnSong');
+        this.bunyipSpawnSong = this.game.add.audio('bunyipSpawnSong');
+        this.bunyipAttackSong = this.game.add.audio('bunyipAttackSong');
+        this.game.sound.setDecodedCallback([ this.playerSpawnSong, this.bunyipSpawnSong,
+            this.bunyipAttackSong ], this.update, this);
 
+        //this.playerSpawnSong.loopFull();
     },
     update: function() {
         //collisions
@@ -131,13 +144,10 @@ TopDownGame.Game.prototype = {
         if(this.bunyipHasSpawned){
             this.bunyipHunting();
         }
-        if(this.bunyipSpawnZone.contains(this.player.x,this.player.y)){
-            console.log("containing");
-        }
     },
     render: function() {
         var debug = this.game.debug;
-        debug.geom(this.bunyipSpawnZone._points[0], 'yellow');
+        //debug.soundInfo(this.bunyipSpawnSong, 20, 32);
 
     },
     playerGotDog: function(){
@@ -145,18 +155,27 @@ TopDownGame.Game.prototype = {
         this.playerHasDog = true;
     },
     levelComplete: function(){
-       this.game.stateTransition.to('Menu', false, false, this.level, false);
+        this.bunyipSpawnSong.fadeOut(500);
+        this.bunyipSpawnSong.onFadeComplete.add(function(){
+            this.game.stateTransition.to('Menu', false, false, this.level, false);
+      }, this);
     },
     spawnBunyip: function(){
         this.bunyip = this.game.add.sprite(this.bunyipSpawnCoords.x, this.bunyipSpawnCoords.y, 'bunyip');
         this.bunyip.animations.add('wiggle', null, 15, true);
         this.bunyip.animations.play('wiggle');
         this.physics.arcade.enableBody(this.bunyip);
+        this.bunyip.anchor.setTo(0.5, 0.5);
 
         this.bunyip.SPEED = 50; // missile speed pixels/second
         this.bunyip.TURN_RATE = 5;
 
         this.bunyipHasSpawned = true;
+
+        this.playerSpawnSong.fadeOut();
+        this.bunyipSpawnSong.loopFull();
+        this.darkness = this.game.add.sprite(0,0, 'darkness');
+        this.darkness.alpha = 0.1;
     },
     bunyipHunting: function() {
         console.log("hunting");
@@ -195,6 +214,11 @@ TopDownGame.Game.prototype = {
     this.bunyip.body.velocity.y = Math.sin(this.bunyip.rotation) * this.bunyip.SPEED;
     },
     gameOver: function(){
-       this.game.stateTransition.to('Menu', false, false, this.level, true);
+        //callback to finish fadeout before transition
+        this.bunyipSpawnSong.fadeOut(500);
+        this.bunyipSpawnSong.onFadeComplete.add(function(){
+            this.bunyipAttackSong.play();
+            this.game.stateTransition.to('Menu', false, false, this.level, true, this.bunyipAttackSong);
+      }, this);
     },
 };

@@ -61,42 +61,6 @@
                  "width":67,
                  "x":287,
                  "y":962
-                }, 
-                {
-                 "height":0,
-                 "id":9,
-                 "name":"spawnPointBunyip",
-                 "polygon":[
-                        {
-                         "x":158,
-                         "y":-6
-                        }, 
-                        {
-                         "x":20,
-                         "y":-852
-                        }, 
-                        {
-                         "x":902,
-                         "y":-852
-                        }, 
-                        {
-                         "x":892,
-                         "y":-996
-                        }, 
-                        {
-                         "x":-96,
-                         "y":-978
-                        }, 
-                        {
-                         "x":-114,
-                         "y":0
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":116,
-                 "y":994
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -104,8 +68,42 @@
          "width":0,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":32,
+         "name":"bunyipspawns",
+         "objects":[
+                {
+                 "height":180,
+                 "id":10,
+                 "name":"zone1",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1020,
+                 "x":2,
+                 "y":4
+                }, 
+                {
+                 "height":1024,
+                 "id":12,
+                 "name":"zone2",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":158,
+                 "x":-2,
+                 "y":2
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":32,
+         "x":0,
+         "y":0
         }],
- "nextobjectid":10,
+ "nextobjectid":13,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,

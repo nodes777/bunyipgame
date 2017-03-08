@@ -68,8 +68,53 @@
          "width":0,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":32,
+         "name":"bunyipspawns",
+         "objects":[
+                {
+                 "height":158,
+                 "id":8,
+                 "name":"zone1",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1024,
+                 "x":2,
+                 "y":-4
+                }, 
+                {
+                 "height":448,
+                 "id":9,
+                 "name":"zone2",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":158,
+                 "x":580,
+                 "y":156
+                }, 
+                {
+                 "height":150,
+                 "id":10,
+                 "name":"zone3",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":254,
+                 "x":450,
+                 "y":870
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":32,
+         "x":0,
+         "y":0
         }],
- "nextobjectid":6,
+ "nextobjectid":11,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,
