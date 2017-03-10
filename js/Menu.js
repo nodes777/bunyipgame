@@ -35,21 +35,13 @@ TopDownGame.Menu.prototype = {
     this.enter = this.game.input.keyboard.addKey(13);
     this.gamepad =  this.game.input.gamepad.start();
 
-    var pad1;
     this.game.input.gamepad.start();
 
     // To listen to buttons from a specific pad listen directly on that pad game.input.gamepad.padX, where X = pad 1-4
     this.pad1 = this.game.input.gamepad.pad1;
-    if(this.game.input.gamepad.active && this.game.input.gamepad.pad1.connected){
-    this.game.input.onDown.add(this.dump, this);
-  }
-},
- dump: function() {
-
-    console.log(this.pad1._axes[0]);
-    console.log(this.pad1._rawPad.axes[0]);
 
 },
+
   update: function() {
     if(this.enter.isDown){
       this.continue();
@@ -63,7 +55,7 @@ TopDownGame.Menu.prototype = {
   setLevelText: function(hour) {
     var words;
     if(this.nextLevel<this.maxLevel){
-       words = "Keep Going? \n Enter or Spacebar";
+       words = "Keep Going? \n Enter to Continue";
       } else {
         words = "You've reached the end";
       }

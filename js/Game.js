@@ -59,19 +59,8 @@ TopDownGame.Game.prototype = {
 
     // To listen to buttons from a specific pad listen directly on that pad game.input.gamepad.padX, where X = pad 1-4
     this.pad1 = this.game.input.gamepad.pad1;
-    console.log(this.pad1);
+    //console.log(this.pad1);
     this.gamePadIsActive = this.game.input.gamepad.active && this.pad1.connected;
-
-    if(this.gamePadIsActive){
-        this.game.input.onDown.add(this.dump, this);
-        this.leftStickX = this.pad1.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X);
-        this.leftStickY = this.pad1.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y);
-    }
-},
- dump: function() {
-    console.log(this.pad1);
-    console.log(this.pad1._axes[0]);
-    console.log(this.pad1._rawPad.axes[0]);
 
 },
     update: function() {
@@ -106,7 +95,6 @@ TopDownGame.Game.prototype = {
         }
 
         if (this.gamePadIsActive) {
-            console.log("active");
             this.leftStickX = this.pad1.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X);
             this.leftStickY = this.pad1.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y);
 
@@ -152,9 +140,10 @@ TopDownGame.Game.prototype = {
                 this.dog.y = this.player.y+20;
             }
         }
-        this.game.physics.arcade.overlap(this.player, this.bunyip, this.gameOver, null, this);
+
         if(this.bunyipHasSpawned){
             this.bunyipHunting();
+            this.game.physics.arcade.overlap(this.player, this.bunyip, this.gameOver, null, this);
         }
     },
     render: function() {
