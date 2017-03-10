@@ -63,7 +63,7 @@ TopDownGame.Menu.prototype = {
   setLevelText: function(hour) {
     var words;
     if(this.nextLevel<this.maxLevel){
-       words = "Keep Going? \n Enter or Spacebar";
+       words = "Keep Going? \n Enter to Continue";
       } else {
         words = "You've reached the end";
       }
