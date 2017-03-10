@@ -22,7 +22,7 @@ TopDownGame.Preload.prototype = {
     this.load.spritesheet('player', 'assets/images/guyWalk.png', 32, 32);
     this.load.spritesheet('dog', 'assets/images/dog.png', 32, 32);
     this.load.spritesheet('bunyip', 'assets/images/bunyip.png', 32, 32);
-    this.load.spritesheet('darkness', 'assets/images/darkness.png', 1200, 1200);
+    this.load.spritesheet('darkness', 'assets/images/darkness.png', 1100, 1100);
 
     //load audio
     this.load.audio('playerSpawnSong', 'assets/sound/playerspawns.mp3');
