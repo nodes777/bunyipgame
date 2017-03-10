@@ -33,28 +33,32 @@ TopDownGame.Menu.prototype = {
     this.cursors = this.game.input.keyboard.createCursorKeys();
     this.spacebar = this.game.input.keyboard.addKey(32);
     this.enter = this.game.input.keyboard.addKey(13);
-  },
+    this.gamepad =  this.game.input.gamepad.start();
+
+    var pad1;
+    this.game.input.gamepad.start();
+
+    // To listen to buttons from a specific pad listen directly on that pad game.input.gamepad.padX, where X = pad 1-4
+    this.pad1 = this.game.input.gamepad.pad1;
+    if(this.game.input.gamepad.active && this.game.input.gamepad.pad1.connected){
+    this.game.input.onDown.add(this.dump, this);
+  }
+},
+ dump: function() {
+
+    console.log(this.pad1._axes[0]);
+    console.log(this.pad1._rawPad.axes[0]);
+
+},
   update: function() {
-    if(this.spacebar.isDown){
-        if(this.playerLostGame){
-        this.song.fadeOut(500);
-        this.song.onFadeComplete.add(function(){
-             this.game.stateTransition.to('Game', true, false, this.nextLevel);
-        }, this);
-      } else {
-        this.game.stateTransition.to('Game', true, false, this.nextLevel);
-      }
-    }
     if(this.enter.isDown){
-      if(this.playerLostGame){
-        this.song.fadeOut(500);
-        this.song.onFadeComplete.add(function(){
-             this.game.stateTransition.to('Game', true, false, this.nextLevel);
-        }, this);
-      } else {
-        this.game.stateTransition.to('Game', true, false, this.nextLevel);
-      }
+      this.continue();
     }
+
+    if (this.pad1.justPressed(Phaser.Gamepad.XBOX360_A)){
+        this.continue();
+    }
+
   },
   setLevelText: function(hour) {
     var words;
@@ -64,7 +68,7 @@ TopDownGame.Menu.prototype = {
         words = "You've reached the end";
       }
       if(this.nextLevel===1){
-        words = "Find your dog and bring him back home before the Bunyip gets ya! \n Enter or Spacebar";
+        words = "Find your dog and bring him back home before the Bunyip gets ya! \n Arrow Keys to Move \n Enter to Start";
       }
       if(this.playerLostGame){
         words = "YoU gOt CaUgHt By ThE BuNYip. \n ReTRy FRom ThE BeGinNinG?";
@@ -81,4 +85,14 @@ TopDownGame.Menu.prototype = {
         text.anchor.set(0.5,0.5);
         text.fixedToCamera = true;
     },
+    continue: function() {
+      if(this.playerLostGame){
+        this.song.fadeOut(500);
+        this.song.onFadeComplete.add(function(){
+             this.game.stateTransition.to('Game', true, false, this.nextLevel);
+        }, this);
+      } else {
+        this.game.stateTransition.to('Game', true, false, this.nextLevel);
+      }
+    }
 };
