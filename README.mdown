@@ -7,8 +7,16 @@ TO DOs
 ======
 * Review bunyipHunting function's math
 * Find How to Full Screen
-* Research Controller Input
-* Dim game world for dusk
+
+* Bunyip slime trail
+* Better tile maps
+* Diagonal walk animation
+* Boost
+* Boost with trail
+* Menu text as image
+* Fog sprites
+* Fade in darkness
+
 
 FRAMEWORKS AND LIBRARIES
 ========================
