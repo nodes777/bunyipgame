@@ -12,13 +12,16 @@ TopDownGame.Game.prototype = {
             this.map = this.game.add.tilemap('level'+this.level);
 
             //the first parameter is the tileset name as specified in Tiled, the second is the key to the asset
-            this.map.addTilesetImage('basicTiles', 'gameTiles');
+            this.map.addTilesetImage('gfx', 'gameTiles');
 
             //create layers
             this.backgroundlayer = this.map.createLayer('background');
-            this.blockedLayer = this.map.createLayer('blockedlayer');
+            this.inanimates = this.map.createLayer('inanimates');
+            this.topground = this.map.createLayer('topground');
+            this.blockedLayer = this.map.createLayer('water');
             //collision on blockedLayer
-            this.map.setCollisionBetween(1, 2000, true, 'blockedlayer');
+            this.map.setCollisionBetween(1, 2000, true, 'water');
+            this.map.setCollisionBetween(1, 2000, true, 'inanimates');
             //makes an array that's easier to write than the objects.objects
             this.mapObjs = this.map.objects.objects;
 
@@ -32,8 +35,8 @@ TopDownGame.Game.prototype = {
             this.home = new Phaser.Rectangle(this.mapObjs[2].x, this.mapObjs[2].y, this.mapObjs[2].width+10, this.mapObjs[2].height+10);
 
             this.bunyipHasSpawned = false;
-            //min 10 secs til bunyip spawns, then 0-5 more
-            this.game.time.events.add(Math.random()*5000 + 10000, this.spawnBunyip, this);
+            //min 10 secs til bunyip spawns, then 0-5 more //Math.random()*5000 + 10000
+            this.game.time.events.add(2000, this.spawnBunyip, this);
 
 
         this.game.camera.setPosition(this.player.x, this.player.y);
@@ -66,6 +69,7 @@ TopDownGame.Game.prototype = {
     update: function() {
         //collisions
         this.game.physics.arcade.collide(this.player, this.blockedLayer);
+        this.game.physics.arcade.collide(this.player, this.inanimates);
         //If player hasn't gotten the dog yet, check for an overlap of those sprites
         if(!this.playerHasDog){
             this.game.physics.arcade.overlap(this.player, this.dog, this.playerGotDog, null, this);
@@ -147,7 +151,7 @@ TopDownGame.Game.prototype = {
         }
     },
     render: function() {
-        var debug = this.game.debug;
+        //var debug = this.game.debug;
         //debug.soundInfo(this.bunyipSpawnSong, 20, 32);
 
     },
@@ -167,18 +171,32 @@ TopDownGame.Game.prototype = {
         this.bunyip.animations.play('wiggle');
         this.physics.arcade.enableBody(this.bunyip);
         this.bunyip.anchor.setTo(0.5, 0.5);
-        //set body slightly smaller so overlap seems fairer
+        this.bunyip.scale.setTo(0.75,0.75);
+        //set body slightly smaller so overlap seem more fair
         this.bunyip.body.setSize(26, 26);
 
-        this.bunyip.SPEED = 85; // missile speed pixels/second
+        this.bunyip.SPEED = 85; // in pixels/second
         this.bunyip.TURN_RATE = 5;
 
         this.bunyipHasSpawned = true;
 
         this.playerSpawnSong.fadeOut();
         this.bunyipSpawnSong.loopFull();
-        this.darkness = this.game.add.sprite(0,0, 'darkness');
-        this.darkness.alpha = 0.1;
+
+         // Create the shadow texture
+        this.shadowTexture = this.game.add.bitmapData(this.game.world.width, this.game.world.height);
+        // Draw shadow
+
+        this.shadowTexture.context.fillStyle = 'rgb(100, 100, 100)';
+        this.shadowTexture.context.fillRect(0, 0, this.game.world.width, this.game.world.height);
+        // Set the blend mode to MULTIPLY. This will darken the colors of
+        // everything below this sprite.
+        darknessImage.blendMode = Phaser.blendModes.MULTIPLY;
+        var darknessImage = this.game.add.image(0, 0, this.shadowTexture);
+        this.game.add.tween(darknessImage).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None);
+        // This bitmap is drawn onto the screen using the MULTIPLY blend mode.
+        // Since this bitmap is over the background, dark areas of the bitmap
+        // will make the background darker.
     },
     findBunyipSpawn : function(){
          //get a random bunyip spawn zone from the bunyip spawn map layer
@@ -192,8 +210,7 @@ TopDownGame.Game.prototype = {
             };
     },
     bunyipHunting: function() {
-    // Calculate the angle from the bunyip to the player.x
-    // and player.y are the mouse position
+    // Calculate the angle from the bunyip to the player.x and player.y
     var targetAngle = this.game.math.angleBetween(
         this.bunyip.x, this.bunyip.y,
         this.player.x, this.player.y

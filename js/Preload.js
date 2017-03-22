@@ -13,13 +13,14 @@ TopDownGame.Preload.prototype = {
 
     //load maps
     this.load.tilemap('level1', 'assets/tilemaps/level1.json', null, Phaser.Tilemap.TILED_JSON);
-    this.load.image('gameTiles', 'assets/images/basicTiles.png');
+    this.load.image('menuTiles', 'assets/images/basicTiles.png');
+    this.load.image('gameTiles', 'assets/images/Overworld.png');
     this.load.tilemap('menu', 'assets/tilemaps/menu.json', null, Phaser.Tilemap.TILED_JSON);
     this.load.tilemap('level2', 'assets/tilemaps/level2.json', null, Phaser.Tilemap.TILED_JSON);
     this.load.tilemap('level3', 'assets/tilemaps/level3.json', null, Phaser.Tilemap.TILED_JSON);
 
     //load sprites
-    this.load.spritesheet('player', 'assets/images/guyWalk.png', 32, 32);
+    this.load.spritesheet('player', 'assets/images/guyWalk.png', 16, 22);
     this.load.spritesheet('dog', 'assets/images/dog.png', 32, 32);
     this.load.spritesheet('bunyip', 'assets/images/bunyip.png', 32, 32);
     this.load.spritesheet('darkness', 'assets/images/darkness.png', 1100, 1100);

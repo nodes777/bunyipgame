@@ -21,7 +21,7 @@ TopDownGame.Menu.prototype = {
     }
    this.map = this.game.add.tilemap('menu');
     //the first parameter is the tileset name as specified in Tiled, the second is the key to the asset
-    this.map.addTilesetImage('basicTiles', 'gameTiles');
+    this.map.addTilesetImage('basicTiles', 'menuTiles');
 
     //create layers
     this.backgroundlayer = this.map.createLayer('background');
