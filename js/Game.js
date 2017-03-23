@@ -25,7 +25,6 @@ TopDownGame.Game.prototype = {
             //makes an array that's easier to write than the objects.objects
             this.mapObjs = this.map.objects.objects;
 
-
             //resizes the game world to match the layer dimensions
             this.backgroundlayer.resizeWorld();
             this.setUpPlayer();
@@ -139,15 +138,17 @@ TopDownGame.Game.prototype = {
                 this.dog.x = this.player.x-15;
             }
             if(this.player.facing==="down"){
-                this.dog.y = this.player.y-25;
+                this.dog.y = this.player.y-15;
             } else {
-                this.dog.y = this.player.y+20;
+                this.dog.y = this.player.y+15;
             }
         }
 
         if(this.bunyipHasSpawned){
             this.bunyipHunting();
             this.game.physics.arcade.overlap(this.player, this.bunyip, this.gameOver, null, this);
+            this.slimeEmitter.emitX = this.bunyip.x + (Math.random() * (5 - 0));
+            this.slimeEmitter.emitY = this.bunyip.y;
         }
     },
     render: function() {
@@ -183,17 +184,42 @@ TopDownGame.Game.prototype = {
         this.playerSpawnSong.fadeOut();
         this.bunyipSpawnSong.loopFull();
 
+        this.darken();
+        this.slimeEmitterSpawn();
+
+
+    },
+    slimeEmitterSpawn: function() {
+        this.slimeEmitter = this.game.add.emitter(this.bunyip.x, this.bunyip.y);
+        this.slimeEmitter.makeParticles('slime');
+
+        this.slimeEmitter.setXSpeed(0, 0);
+        this.slimeEmitter.setYSpeed(0, 0);
+
+        //this.slimeEmitter.setRotation(-4, 50);
+        //setAlpha(min, max, rate, ease, yoyo)
+        this.slimeEmitter.setAlpha(0.1, 1, 3000, Phaser.Easing.Linear.None, true);
+        //setScale(minX, maxX, minY, maxY, rate, ease, yoyo)
+        this.slimeEmitter.setScale(0.2, 1, 0.2, 1, 3000, Phaser.Easing.Quintic.Out);
+        this.slimeEmitter.gravity = 0;
+
+        //start(explode, lifespan, frequency, quantity, forceQuantity)
+        this.slimeEmitter.start(false, 6000);
+
+        //this.slimeEmitter.emitX = this.bunyip.x;
+        //this.slimeEmitter.emitY = this.bunyip.y;
+    },
+    darken: function(){
          // Create the shadow texture
         this.shadowTexture = this.game.add.bitmapData(this.game.world.width, this.game.world.height);
         // Draw shadow
-
         this.shadowTexture.context.fillStyle = 'rgb(100, 100, 100';
         this.shadowTexture.context.fillRect(0, 0, this.game.world.width, this.game.world.height);
-        // Set the blend mode to MULTIPLY. This will darken the colors of
-        // everything below this sprite.
-
+        //use the texture as an image and place it in the game
         var darknessImage = this.game.add.image(0, 0, this.shadowTexture);
         darknessImage.alpha = 0;
+        // Set the blend mode to MULTIPLY. This will darken the colors of
+        // everything below this sprite.
         darknessImage.blendMode = Phaser.blendModes.MULTIPLY;
         //to(properties, duration, ease, autoStart, delay, repeat, yoyo)
         this.game.add.tween(darknessImage).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true);

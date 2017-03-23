@@ -3,12 +3,17 @@ Bunyip Game
 
 A phaser game built to promote my song about [Bunyips](https://en.wikipedia.org/wiki/Bunyip).
 
-TO DOs
+Big TO DOs
 ======
 * Review bunyipHunting function's math
 * Find How to Full Screen
 * Research Controller Input
-* Dim game world for dusk
+
+Little TO DOs
+======
+* Add boost to key board
+* Add slime trail for bunyip
+* Organize create function in Game.js maybe add a preload
 
 FRAMEWORKS AND LIBRARIES
 ========================
