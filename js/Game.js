@@ -167,7 +167,7 @@ TopDownGame.Game.prototype = {
     },
     spawnBunyip: function(){
         this.bunyip = this.game.add.sprite(this.bunyipSpawnCoords.x, this.bunyipSpawnCoords.y, 'bunyip');
-        this.bunyip.animations.add('wiggle', null, 15, true);
+        this.bunyip.animations.add('wiggle', null, 8, true);
         this.bunyip.animations.play('wiggle');
         this.physics.arcade.enableBody(this.bunyip);
         this.bunyip.anchor.setTo(0.5, 0.5);
@@ -187,13 +187,16 @@ TopDownGame.Game.prototype = {
         this.shadowTexture = this.game.add.bitmapData(this.game.world.width, this.game.world.height);
         // Draw shadow
 
-        this.shadowTexture.context.fillStyle = 'rgb(100, 100, 100)';
+        this.shadowTexture.context.fillStyle = 'rgb(100, 100, 100';
         this.shadowTexture.context.fillRect(0, 0, this.game.world.width, this.game.world.height);
         // Set the blend mode to MULTIPLY. This will darken the colors of
         // everything below this sprite.
-        darknessImage.blendMode = Phaser.blendModes.MULTIPLY;
+
         var darknessImage = this.game.add.image(0, 0, this.shadowTexture);
-        this.game.add.tween(darknessImage).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None);
+        darknessImage.alpha = 0;
+        darknessImage.blendMode = Phaser.blendModes.MULTIPLY;
+        //to(properties, duration, ease, autoStart, delay, repeat, yoyo)
+        this.game.add.tween(darknessImage).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true);
         // This bitmap is drawn onto the screen using the MULTIPLY blend mode.
         // Since this bitmap is over the background, dark areas of the bitmap
         // will make the background darker.
